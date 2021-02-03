@@ -2,10 +2,12 @@ class CartsController < ApplicationController
 
   def show
     if enhanced_cart.length == 0
-      render(
-        html: "<script>alert('Please add something to your cart first!')</script>".html_safe,
-        layout: 'application'
-      )
+      # render(
+      #   html: "<script>alert('Please add something to your cart first!')</script>".html_safe,
+      #   layout: 'application'
+      # )
+      flash[:alert] = 'Please add somethign to your cart first!'
+      redirect_to root_path
     end
   end
 
@@ -20,10 +22,8 @@ class CartsController < ApplicationController
     product_id = params[:product_id].to_s
     modify_cart_delta(product_id, -1)
     if enhanced_cart.length == 0
-      render(
-        html: "<script>alert('Please add something to your cart first!')</script>".html_safe,
-        layout: 'application'
-      )
+      flash[:alert] = 'Your cart is now empty.'
+      redirect_to root_path
     else
       redirect_to :back
     end
