@@ -10,6 +10,9 @@
 
   <%= render 'layouts/top_nav' %>
 
+  <% if flash[:alert] %>
+  <script>alert('<%= flash[:alert] %>')</script>
+  <% end %>
   <main class="container">
     <%= yield %>
   </main>
