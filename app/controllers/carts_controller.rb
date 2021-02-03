@@ -1,6 +1,12 @@
 class CartsController < ApplicationController
 
   def show
+    if enhanced_cart.length == 0
+      render(
+        html: "<script>alert('Please add something to your cart first!')</script>".html_safe,
+        layout: 'application'
+      )
+    end
   end
 
   def add_item
@@ -13,8 +19,14 @@ class CartsController < ApplicationController
   def remove_item
     product_id = params[:product_id].to_s
     modify_cart_delta(product_id, -1)
-
-    redirect_to :back
+    if enhanced_cart.length == 0
+      render(
+        html: "<script>alert('Please add something to your cart first!')</script>".html_safe,
+        layout: 'application'
+      )
+    else
+      redirect_to :back
+    end
   end
 
   private
