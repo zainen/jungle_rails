@@ -2,10 +2,6 @@ class CartsController < ApplicationController
 
   def show
     if enhanced_cart.length == 0
-      # render(
-      #   html: "<script>alert('Please add something to your cart first!')</script>".html_safe,
-      #   layout: 'application'
-      # )
       flash[:alert] = 'Please add somethign to your cart first!'
       redirect_to root_path
     end
