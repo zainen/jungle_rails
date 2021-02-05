@@ -7,6 +7,10 @@ class Sale < ActiveRecord::Base
     where('sales.starts_on <= ? AND sales.ends_on >= ?', Date.current, Date.current)
   end
 
+  def self.best_sale
+    select('*').where('sales.starts_on <= ? AND sales.ends_on >= ?', Date.current, Date.current).order(:percent_off).last
+  end
+
   def finished?
     ends_on < Date.current
   end
