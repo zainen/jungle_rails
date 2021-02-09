@@ -12,21 +12,16 @@ class UsersController < ApplicationController
       flash[:alert] = 'Please enter a character longer than 5 characters long spaces dont count silly'
       redirect_to '/signup'
     else
-      if check_if_user_exists(@user.email)
-        if checker[:password] == checker[:password_confirmation]
-          if @user.save
-            session[:user_id] = @user.id
-            redirect_to :root, notice: 'User created!'
-          else
-            flash[:alert] = 'User Not Saved!'
-            redirect_to '/signup'
-          end
+      if checker[:password] == checker[:password_confirmation]
+        if @user.save
+          session[:user_id] = @user.id
+          redirect_to :root, notice: 'User created!'
         else
-          flash[:alert] = 'Password confirmation failed!'
+          flash[:alert] = @user.errors.full_messages[0]
           redirect_to '/signup'
         end
       else
-        flash[:alert] = 'Email already in use'
+        flash[:alert] = 'Password confirmation failed!'
         redirect_to '/signup'
       end
     end
@@ -36,7 +31,8 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :name,
+      :first_name,
+      :last_name,
       :email,
       :password
     )
