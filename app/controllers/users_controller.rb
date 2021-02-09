@@ -4,11 +4,31 @@ class UsersController < ApplicationController
   end
   def create
     @user = User.new(user_params)
-    if @user.save
-      session[:user_id] = @user.id
-      redirect_to :root, notice: 'User created!'
-    else
+    if @user && @user.password
+      @user.password.strip!
+    end
+    @user.email.downcase!
+    if @user.password && @user.password.length < 5
+      flash[:alert] = 'Please enter a character longer than 5 characters long spaces dont count silly'
       redirect_to '/signup'
+    else
+      if check_if_user_exists(@user.email)
+        if checker[:password] == checker[:password_confirmation]
+          if @user.save
+            session[:user_id] = @user.id
+            redirect_to :root, notice: 'User created!'
+          else
+            flash[:alert] = 'User Not Saved!'
+            redirect_to '/signup'
+          end
+        else
+          flash[:alert] = 'Password confirmation failed!'
+          redirect_to '/signup'
+        end
+      else
+        flash[:alert] = 'Email already in use'
+        redirect_to '/signup'
+      end
     end
   end
 
@@ -20,5 +40,16 @@ class UsersController < ApplicationController
       :email,
       :password
     )
+  end
+  def checker
+    params.require(:user)
+  end
+  def check_if_user_exists (email)
+    @email = email
+    if User.find_by email: @email
+      false
+    else
+      true
+    end
   end
 end
