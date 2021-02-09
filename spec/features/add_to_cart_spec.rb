@@ -17,10 +17,11 @@ RSpec.feature "AddToCarts", type: :feature, js: true do
   end
 
   scenario 'see product in cart after added' do
+    
     visit root_path
 
     click_on "Add", match: :first
 
-    expect(page.has_content?('My Cart (1)'))
+    expect(page.has_content?('My Cart (1)')).to be true
   end
 end
